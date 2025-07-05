@@ -1,0 +1,23 @@
+[
+  {
+    "title": "Welcome to Zylook",
+    "description": "Discover curated clothing combos for every occasion.",
+    "imagePath": "assets/animations/onboarding1.json",
+    "buttonText": "Next",
+    "backgroundColor": "#E3F2FD"
+  },
+  {
+    "title": "Personalize Your Style",
+    "description": "Choose your gender and style preferences.",
+    "imagePath": "assets/animations/onboarding2.json",
+    "buttonText": "Next",
+    "backgroundColor": "#E8F5E9"
+  },
+  {
+    "title": "Get Started",
+    "description": "Sign up or log in to start shopping!",
+    "imagePath": "assets/animations/onboarding3.json",
+    "buttonText": "Get Started",
+    "backgroundColor": "#F3E5F5"
+  }
+]
