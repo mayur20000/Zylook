@@ -94,6 +94,7 @@ flutter:
     - assets/animations/loading.json
     - assets/animations/transition.json
     - assets/animations/auth_header.json
+    - assets/animations/home_header.json
 
 
       # An image asset can refer to one or more resolution-specific "variants", see
