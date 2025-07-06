@@ -12,19 +12,19 @@ class HomeScreen extends StatelessWidget {
       'name': 'Casual Summer Combo',
       'description': 'Lightweight shirt and shorts for sunny days.',
       'price': 49.99,
-      'image': 'assets/images/outfit1.png',
+      'image': 'assets/images/outfit1.jpg',
     },
     {
       'name': 'Formal Evening Look',
       'description': 'Elegant blazer and trousers for events.',
       'price': 89.99,
-      'image': 'assets/images/outfit2.png',
+      'image': 'assets/images/outfit2.jpg',
     },
     {
       'name': 'Sporty Streetwear',
       'description': 'Comfy hoodie and joggers for active days.',
       'price': 69.99,
-      'image': 'assets/images/outfit3.png',
+      'image': 'assets/images/outfit3.jpg',
     },
   ];
 
@@ -36,7 +36,7 @@ class HomeScreen extends StatelessWidget {
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [Color(0xFFF8F4F0), Color(0xFFDDD0C8), Color(0xFFB0A98F)],
+            colors: [Color(0xFFF8F4F0), Color(0xFFDDD0C8), Color(0xFFDDD0C8)],
           ),
         ),
         child: SafeArea(
