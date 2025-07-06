@@ -35,6 +35,7 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
 
+
   equatable: ^2.0.5
   flutter_bloc: ^9.1.1
   shared_preferences: ^2.2.0
@@ -53,6 +54,7 @@ dependencies:
   cached_network_image: ^3.3.0
 
   # UI Components
+  hugeicons: ^0.0.7
   shimmer: ^3.0.0
 
   # Local Storage
@@ -89,6 +91,9 @@ flutter:
     - assets/images/onboarding1.json
     - assets/images/onboarding2.json
     - assets/images/onboarding3.json
+    - assets/animations/loading.json
+    - assets/animations/transition.json
+    - assets/animations/auth_header.json
 
 
       # An image asset can refer to one or more resolution-specific "variants", see
