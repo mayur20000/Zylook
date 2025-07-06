@@ -28,5 +28,29 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         emit(AuthError(result['error']));
       }
     });
+
+    on<LoginWithEmailEvent>((event, emit) async {
+      emit(AuthLoading());
+      final result = await authService.signInWithEmail(event.email, event.password);
+      if (result['user'] != null) {
+        emit(AuthSuccess(result['user'].uid));
+      } else {
+        emit(AuthError(result['error']));
+      }
+    });
+
+    on<SignUpWithEmailEvent>((event, emit) async {
+      if (event.password != event.confirmPassword) {
+        emit(AuthError('Passwords do not match'));
+        return;
+      }
+      emit(AuthLoading());
+      final result = await authService.signUpWithEmail(event.email, event.password);
+      if (result['user'] != null) {
+        emit(AuthSuccess(result['user'].uid));
+      } else {
+        emit(AuthError(result['error']));
+      }
+    });
   }
 }

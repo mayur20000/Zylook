@@ -5,6 +5,7 @@ class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   String? _verificationId;
 
+  // Send OTP to phone number
   Future<Map<String, dynamic>> sendOtp(String phoneNumber) async {
     final completer = Completer<Map<String, dynamic>>();
 
@@ -13,20 +14,14 @@ class AuthService {
         phoneNumber: phoneNumber,
         verificationCompleted: (PhoneAuthCredential credential) async {
           final userCredential = await _auth.signInWithCredential(credential);
-          if (!completer.isCompleted) {
-            completer.complete({'user': userCredential.user, 'error': null});
-          }
+          completer.complete({'user': userCredential.user, 'error': null});
         },
         verificationFailed: (FirebaseAuthException e) {
-          if (!completer.isCompleted) {
-            completer.complete({'user': null, 'error': _handleAuthError(e)});
-          }
+          completer.complete({'user': null, 'error': _handleAuthError(e)});
         },
         codeSent: (String verificationId, int? resendToken) {
           _verificationId = verificationId;
-          if (!completer.isCompleted) {
-            completer.complete({'user': null, 'error': null}); // Just indicate success of code sent
-          }
+          completer.complete({'user': null, 'error': null});
         },
         codeAutoRetrievalTimeout: (String verificationId) {
           _verificationId = verificationId;
@@ -42,6 +37,7 @@ class AuthService {
     }
   }
 
+  // Verify OTP entered by the user
   Future<Map<String, dynamic>> verifyOtp(String otp) async {
     try {
       if (_verificationId == null) {
@@ -60,10 +56,38 @@ class AuthService {
     }
   }
 
+  // Sign in with email and password
+  Future<Map<String, dynamic>> signInWithEmail(String email, String password) async {
+    try {
+      final UserCredential credential = await _auth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      return {'user': credential.user, 'error': null};
+    } catch (e) {
+      return {'user': null, 'error': _handleAuthError(e)};
+    }
+  }
+
+  // Sign up with email and password
+  Future<Map<String, dynamic>> signUpWithEmail(String email, String password) async {
+    try {
+      final UserCredential credential = await _auth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      return {'user': credential.user, 'error': null};
+    } catch (e) {
+      return {'user': null, 'error': _handleAuthError(e)};
+    }
+  }
+
+  // Sign out the current user
   Future<void> signOut() async {
     await _auth.signOut();
   }
 
+  // Map FirebaseAuthException to user-friendly messages
   String _handleAuthError(dynamic error) {
     if (error is FirebaseAuthException) {
       switch (error.code) {
@@ -73,6 +97,16 @@ class AuthService {
           return 'Incorrect OTP entered.';
         case 'too-many-requests':
           return 'Too many requests. Try again later.';
+        case 'invalid-email':
+          return 'Invalid email address.';
+        case 'user-not-found':
+          return 'No user found with this email.';
+        case 'wrong-password':
+          return 'Incorrect password.';
+        case 'email-already-in-use':
+          return 'Email is already registered.';
+        case 'weak-password':
+          return 'Password is too weak.';
         default:
           return 'Authentication error: ${error.message ?? error.toString()}';
       }
