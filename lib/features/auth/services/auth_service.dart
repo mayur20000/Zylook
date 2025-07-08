@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -14,6 +15,8 @@ class AuthService {
         phoneNumber: phoneNumber,
         verificationCompleted: (PhoneAuthCredential credential) async {
           final userCredential = await _auth.signInWithCredential(credential);
+          // Store UID in SharedPreferences
+          await _storeUserId(userCredential.user?.uid);
           completer.complete({'user': userCredential.user, 'error': null});
         },
         verificationFailed: (FirebaseAuthException e) {
@@ -50,6 +53,8 @@ class AuthService {
       );
 
       final userCredential = await _auth.signInWithCredential(credential);
+      // Store UID in SharedPreferences
+      await _storeUserId(userCredential.user?.uid);
       return {'user': userCredential.user, 'error': null};
     } catch (e) {
       return {'user': null, 'error': _handleAuthError(e)};
@@ -63,6 +68,8 @@ class AuthService {
         email: email,
         password: password,
       );
+      // Store UID in SharedPreferences
+      await _storeUserId(credential.user?.uid);
       return {'user': credential.user, 'error': null};
     } catch (e) {
       return {'user': null, 'error': _handleAuthError(e)};
@@ -76,6 +83,8 @@ class AuthService {
         email: email,
         password: password,
       );
+      // Store UID in SharedPreferences
+      await _storeUserId(credential.user?.uid);
       return {'user': credential.user, 'error': null};
     } catch (e) {
       return {'user': null, 'error': _handleAuthError(e)};
@@ -84,7 +93,25 @@ class AuthService {
 
   // Sign out the current user
   Future<void> signOut() async {
+    // Clear UID from SharedPreferences
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('user_id');
     await _auth.signOut();
+  }
+
+  // Check if user is logged in
+  Future<bool> isLoggedIn() async {
+    final prefs = await SharedPreferences.getInstance();
+    final userId = prefs.getString('user_id');
+    return _auth.currentUser != null && userId != null && userId == _auth.currentUser!.uid;
+  }
+
+  // Store user ID in SharedPreferences
+  Future<void> _storeUserId(String? uid) async {
+    if (uid != null) {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('user_id', uid);
+    }
   }
 
   // Map FirebaseAuthException to user-friendly messages

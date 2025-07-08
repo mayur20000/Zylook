@@ -104,8 +104,7 @@ class SignUpScreen extends StatelessWidget {
                                 )
                                     : ElevatedButton(
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: Color.fromRGBO(
-                                        211, 205, 205, 1.0),
+                                    backgroundColor: Colors.blue,
                                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                                     minimumSize: const Size(double.infinity, 50),
                                   ),

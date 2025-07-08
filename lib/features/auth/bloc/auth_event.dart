@@ -22,3 +22,5 @@ class SignUpWithEmailEvent extends AuthEvent {
   final String confirmPassword;
   SignUpWithEmailEvent(this.email, this.password, this.confirmPassword);
 }
+
+class CheckLoginStatusEvent extends AuthEvent {}

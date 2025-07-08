@@ -86,7 +86,7 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
                                     decoration: const InputDecoration(
                                       labelText: 'Phone Number (e.g., +91xxxxxxxxxx)',
                                       border: OutlineInputBorder(),
-                                      prefixIcon: Icon(HugeIcons.strokeRoundedAiPhone01),
+                                      prefixIcon: Icon(HugeIcons.strokeRoundedMobileProgramming02),
                                     ),
                                     keyboardType: TextInputType.phone,
                                     enabled: !isLoading,
