@@ -5,7 +5,9 @@ import 'package:hugeicons/hugeicons.dart'; // Ensure hugeicons is in your pubspe
 import '../bloc/home_bloc.dart';
 import '../bloc/home_event.dart';
 import '../bloc/home_state.dart';
-import '../widgets/custom_nav_bar.dart'; // Your custom nav bar
+import '../models/outfit_model.dart'; // Import Outfit model
+import '../widgets/custom_nav_bar.dart';
+import 'outfit_detail_screen.dart'; // New outfit detail screen
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -13,9 +15,9 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => HomeBloc()..add(LoadOutfitsEvent()), // Keep your outfit loading
+      create: (context) => HomeBloc()..add(LoadOutfitsEvent()),
       child: Scaffold(
-        backgroundColor: const Color(0xFFF0F0F0), // A light grey background to match the new design
+        backgroundColor: const Color(0xFFF0F0F0),
         body: SafeArea(
           child: Column(
             children: [
@@ -31,7 +33,7 @@ class HomeScreen extends StatelessWidget {
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      child: const Icon(HugeIcons.strokeRoundedQrCode01, color: Color(0xFF5B6056), size: 28), // QR Code/Menu icon
+                      child: const Icon(HugeIcons.strokeRoundedQrCode01, color: Color(0xFF5B6056), size: 28),
                     ),
                     Expanded(
                       child: Column(
@@ -45,7 +47,7 @@ class HomeScreen extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                '92 High Street, London', // Example address
+                                '92 High Street, London',
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 14,
@@ -65,7 +67,7 @@ class HomeScreen extends StatelessWidget {
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(12),
                           ),
-                          child: const Icon(HugeIcons.strokeRoundedNotification01, color: Color(0xFF5B6056), size: 28), // Notification icon
+                          child: const Icon(HugeIcons.strokeRoundedNotification01, color: Color(0xFF5B6056), size: 28),
                         ),
                         Positioned(
                           top: 8,
@@ -74,7 +76,7 @@ class HomeScreen extends StatelessWidget {
                             width: 8,
                             height: 8,
                             decoration: BoxDecoration(
-                              color: Colors.greenAccent[400], // Notification dot color
+                              color: Colors.greenAccent[400],
                               shape: BoxShape.circle,
                             ),
                           ),
@@ -102,13 +104,13 @@ class HomeScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-                  child: TextField(
+                  child: const TextField(
                     decoration: InputDecoration(
                       hintText: 'Search the entire shop',
-                      prefixIcon: const Icon(Icons.search, color: Colors.grey),
+                      prefixIcon: Icon(Icons.search, color: Colors.grey),
                       border: InputBorder.none,
                       contentPadding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                      EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                     ),
                   ),
                 ),
@@ -121,7 +123,7 @@ class HomeScreen extends StatelessWidget {
                 child: Container(
                   padding: const EdgeInsets.all(16.0),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFE0E0E0), // Lighter grey for the banner
+                    color: const Color(0xFFE0E0E0),
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: Row(
@@ -142,12 +144,10 @@ class HomeScreen extends StatelessWidget {
                             fontSize: 16, fontWeight: FontWeight.normal, color: Colors.black87),
                       ),
                       const Spacer(),
-                      // You can add a subtle image or Lottie animation here if desired
                       Image.asset(
-                        'assets/images/delivery_promo.png', // Placeholder image (create this asset)
+                        'assets/images/delivery_promo.png', // Ensure this asset exists
                         height: 40,
                       )
-                      // Lottie.asset('assets/animations/delivery_promo.json', height: 50),
                     ],
                   ),
                 ),
@@ -166,7 +166,6 @@ class HomeScreen extends StatelessWidget {
                     ),
                     TextButton(
                       onPressed: () {
-                        // TODO: Navigate to All Categories screen
                         ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(content: Text('See All Categories')));
                       },
@@ -189,14 +188,14 @@ class HomeScreen extends StatelessWidget {
                   itemCount: 6, // Example: 6 categories
                   itemBuilder: (context, index) {
                     final categories = [
-                      {'name': 'Phones', 'icon': HugeIcons.strokeRoundedSmartPhone02},
+                      {'name': 'Phones', 'icon': HugeIcons.strokeRoundedSmartPhone01},
                       {'name': 'Consoles', 'icon': HugeIcons.strokeRoundedGame},
                       {'name': 'Laptops', 'icon': HugeIcons.strokeRoundedLaptop},
                       {'name': 'Cameras', 'icon': HugeIcons.strokeRoundedCamera01},
                       {'name': 'Audio', 'icon': HugeIcons.strokeRoundedHeadphones},
                       {'name': 'Wearables', 'icon': HugeIcons.strokeRoundedSmartWatch01},
                     ];
-                    final category = categories[index % categories.length]; // Use modulo to loop if itemCount > categories.length
+                    final category = categories[index % categories.length];
                     return Padding(
                       padding: const EdgeInsets.only(right: 16.0),
                       child: Column(
@@ -231,7 +230,7 @@ class HomeScreen extends StatelessWidget {
               ),
               const SizedBox(height: 24),
 
-              // Flash Sale Section
+              // Flash Sale Section (Outfits)
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: Row(
@@ -244,18 +243,17 @@ class HomeScreen extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                       decoration: BoxDecoration(
-                        color: Colors.yellow[600], // Flash sale timer background
+                        color: Colors.yellow[600],
                         borderRadius: BorderRadius.circular(5),
                       ),
                       child: const Text(
-                        '02:59:23', // Placeholder for countdown timer
+                        '02:59:23',
                         style: TextStyle(
                             fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87),
                       ),
                     ),
                     TextButton(
                       onPressed: () {
-                        // TODO: Navigate to All Flash Sale items
                         ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(content: Text('See All Flash Sales')));
                       },
@@ -276,27 +274,36 @@ class HomeScreen extends StatelessWidget {
                     if (state is HomeLoading) {
                       return const Center(child: CircularProgressIndicator());
                     } else if (state is HomeLoaded) {
-                      // Using ListView.builder for horizontal scrollable products
-                      // This simulates the Flash Sale items
+                      // Displaying outfits as Flash Sale items
                       return ListView.builder(
                         scrollDirection: Axis.horizontal,
                         padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                        itemCount: state.outfits.length, // Using outfits as flash sale items
+                        itemCount: state.outfits.length,
                         itemBuilder: (context, index) {
                           final outfit = state.outfits[index];
-                          return FlashSaleProductCard(
-                            productName: outfit.name,
-                            imageUrl: outfit.imageUrl, // Use your outfit images
-                            currentPrice: outfit.price,
-                            oldPrice: outfit.price * 1.5, // Example old price for discount
-                            description: outfit.description,
+                          final outfitPrice = state.outfitPrices[outfit.id] ?? 0.0;
+                          // Assume an old price for demonstration, e.g., 20% higher
+                          final oldOutfitPrice = outfitPrice * 1.25;
+
+                          return FlashSaleOutfitCard(
+                            outfit: outfit,
+                            currentPrice: outfitPrice,
+                            oldPrice: oldOutfitPrice,
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => OutfitDetailScreen(outfit: outfit),
+                                ),
+                              );
+                            },
                           );
                         },
                       );
                     } else if (state is HomeError) {
                       return Center(child: Text(state.message));
                     }
-                    return const Center(child: Text('No Flash Sale items available'));
+                    return const Center(child: Text('No Flash Sale outfits available'));
                   },
                 ),
               ),
@@ -309,97 +316,104 @@ class HomeScreen extends StatelessWidget {
   }
 }
 
-// Custom Widget for Flash Sale Product Cards
-class FlashSaleProductCard extends StatelessWidget {
-  final String productName;
-  final String imageUrl;
+// Custom Widget for Flash Sale Outfit Cards (renamed from ProductCard)
+class FlashSaleOutfitCard extends StatelessWidget {
+  final Outfit outfit;
   final double currentPrice;
   final double oldPrice;
-  final String description;
+  final VoidCallback onTap;
 
-  const FlashSaleProductCard({
+  const FlashSaleOutfitCard({
     Key? key,
-    required this.productName,
-    required this.imageUrl,
+    required this.outfit,
     required this.currentPrice,
     required this.oldPrice,
-    required this.description,
+    required this.onTap,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: const EdgeInsets.only(right: 16.0), // Spacing between cards
-      elevation: 4,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      clipBehavior: Clip.antiAlias,
-      child: SizedBox(
-        width: 180, // Fixed width for flash sale cards
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Stack(
-              children: [
-                Image.asset(
-                  imageUrl, // Using Image.asset as per your Outfit model
-                  height: 120,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                ),
-                Positioned(
-                  top: 8,
-                  right: 8,
-                  child: Container(
-                    decoration: const BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.white,
-                    ),
-                    child: IconButton(
-                      icon: const Icon(Icons.favorite_border, size: 24, color: Colors.grey),
-                      onPressed: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Added $productName to favorites')),
-                        );
-                      },
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+    return GestureDetector(
+      onTap: onTap,
+      child: Card(
+        margin: const EdgeInsets.only(right: 16.0),
+        elevation: 4,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        clipBehavior: Clip.antiAlias,
+        child: SizedBox(
+          width: 180,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Stack(
                 children: [
-                  Text(
-                    productName,
-                    style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
+                  Image.network( // Use Image.network for Firebase storage URLs
+                    outfit.imageUrl,
+                    height: 120,
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) => Image.asset(
+                      'assets/images/placeholder_outfit.png', // Placeholder on error
+                      height: 120,
+                      width: double.infinity,
+                      fit: BoxFit.cover,
+                    ),
                   ),
-                  const SizedBox(height: 4),
-                  Row(
-                    children: [
-                      Text(
-                        '£${currentPrice.toStringAsFixed(2)}', // Using '£' for currency
-                        style: const TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black),
+                  Positioned(
+                    top: 8,
+                    right: 8,
+                    child: Container(
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.white,
                       ),
-                      const SizedBox(width: 8),
-                      Text(
-                        '£${oldPrice.toStringAsFixed(2)}',
-                        style: const TextStyle(
-                          decoration: TextDecoration.lineThrough,
-                          color: Colors.grey,
-                          fontSize: 12,
-                        ),
+                      child: IconButton(
+                        icon: const Icon(Icons.favorite_border, size: 24, color: Colors.grey),
+                        onPressed: () {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('Added ${outfit.name} to favorites')),
+                          );
+                        },
                       ),
-                    ],
+                    ),
                   ),
                 ],
               ),
-            ),
-          ],
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      outfit.name,
+                      style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 4),
+                    Row(
+                      children: [
+                        Text(
+                          '£${currentPrice.toStringAsFixed(2)}',
+                          style: const TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black),
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          '£${oldPrice.toStringAsFixed(2)}',
+                          style: const TextStyle(
+                            decoration: TextDecoration.lineThrough,
+                            color: Colors.grey,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
