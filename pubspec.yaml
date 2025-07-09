@@ -37,6 +37,7 @@ dependencies:
 
 
   equatable: ^2.0.5
+
   flutter_bloc: ^9.1.1
   shared_preferences: ^2.2.0
   google_sign_in: ^7.1.0
@@ -95,6 +96,7 @@ flutter:
     - assets/animations/transition.json
     - assets/animations/auth_header.json
     - assets/animations/home_header.json
+    - assets/images/delivery_promo.jpg
 
 
       # An image asset can refer to one or more resolution-specific "variants", see
