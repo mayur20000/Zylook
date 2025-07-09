@@ -10,7 +10,7 @@ import '../services/home_service.dart'; // Import the new service
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
   final HomeService _homeService = HomeService(); // Instantiate the service
 
-  HomeBloc() : super(HomeInitial()) {
+  HomeBloc({required HomeService homeService}) : super(HomeInitial()) {
     on<LoadOutfitsEvent>((event, emit) async {
       emit(HomeLoading());
       try {

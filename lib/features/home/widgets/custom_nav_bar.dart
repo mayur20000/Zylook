@@ -1,40 +1,82 @@
 import 'package:flutter/material.dart';
 import 'package:hugeicons/hugeicons.dart';
+import 'package:flutter_bloc/flutter_bloc.dart'; // Import Bloc
+import '../../auth/bloc/auth_bloc.dart';
 
 class CustomNavBar extends StatefulWidget {
-  const CustomNavBar({super.key});
+  // Add a callback to notify the parent when an item is selected
+  final int selectedIndex;
+  final Function(int) onItemSelected;
+
+  const CustomNavBar({
+    super.key,
+    required this.selectedIndex,
+    required this.onItemSelected,
+  });
 
   @override
   _CustomNavBarState createState() => _CustomNavBarState();
 }
 
 class _CustomNavBarState extends State<CustomNavBar> {
-  int _selectedIndex = 0;
-
-  static const List<String> _routes = [
-    '/home',
-    '/category',
-    '/account',
-    '/cart',
-    '/other',
-  ];
+  // _selectedIndex is now managed by the parent via widget.selectedIndex
 
   void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-    print('Navigating to ${_routes[index]}');
-    Navigator.pushReplacementNamed(context, _routes[index]);
+    if (index == 2) { // Assuming 'Account' is at index 2
+      _showAccountOptions(context);
+    } else {
+      widget.onItemSelected(index); // Notify the parent to change the screen
+    }
+  }
+
+  void _showAccountOptions(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext bc) {
+        return SafeArea(
+          child: Wrap(
+            children: <Widget>[
+              ListTile(
+                leading: const Icon(Icons.person),
+                title: const Text('My Profile'),
+                onTap: () {
+                  Navigator.pop(bc); // Close bottom sheet
+                  // Navigate using the root navigator for screens that are not part of the main tab content
+                  Navigator.of(context).pushNamed('/profile');
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.settings),
+                title: const Text('Settings'),
+                onTap: () {
+                  Navigator.pop(bc); // Close bottom sheet
+                  Navigator.of(context).pushNamed('/settings');
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.logout, color: Colors.red),
+                title: const Text('Logout', style: TextStyle(color: Colors.red)),
+                onTap: () {
+                  Navigator.pop(bc); // Close bottom sheet
+                  context.read<AuthBloc>().add(AuthLogoutEvent());
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
-      currentIndex: _selectedIndex,
+      currentIndex: widget.selectedIndex, // Use the selectedIndex from the parent
       onTap: _onItemTapped,
       selectedItemColor: Colors.blue,
       unselectedItemColor: Colors.grey,
       showUnselectedLabels: true,
+      type: BottomNavigationBarType.fixed, // Ensures all labels are shown
       items: const [
         BottomNavigationBarItem(
           icon: Icon(HugeIcons.strokeRoundedHome01),

@@ -33,78 +33,117 @@ class SignUpScreen extends StatelessWidget {
               child: BlocConsumer<AuthBloc, AuthState>(
                 listener: (context, state) {
                   if (state is AuthSuccess) {
-                    print('Navigating to /home');
-                    Navigator.pushReplacementNamed(context, '/home');
+                    print('Signup successful. Navigating to /main_navigation');
+                    // *** FIX: Navigate to /main_navigation and clear auth stack ***
+                    Navigator.of(context).pushNamedAndRemoveUntil(
+                      '/main_navigation',
+                          (route) => false, // Clears all previous routes
+                    );
                   } else if (state is AuthError) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(content: Text(state.message)),
                     );
+                  } else if (state is AuthLoading) {
+                    // Optionally show a loading indicator here
                   }
                 },
                 builder: (context, state) {
-                  final isLoading = state is AuthLoading;
-                  return SingleChildScrollView(
-                    physics: const ClampingScrollPhysics(),
+                  return AbsorbPointer( // Disable interaction while loading
+                    absorbing: state is AuthLoading,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Lottie.asset(
-                          'assets/animations/auth_header.json',
-                          width: 200,
-                          height: 200,
-                          frameRate: FrameRate(30),
+                        Expanded(
+                          child: Lottie.asset(
+                            'assets/animations/onboarding1.json', // Ensure this asset exists
+                            fit: BoxFit.contain,
+                            frameRate: FrameRate(60),
+                          ),
                         ),
                         const SizedBox(height: 20),
-                        Card(
-                          elevation: 4,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                          child: Padding(
-                            padding: const EdgeInsets.all(16.0),
+                        const Text(
+                          'Join Zylook!',
+                          style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white),
+                        ),
+                        const SizedBox(height: 10),
+                        const Text(
+                          'Create your account to start shopping.',
+                          style: TextStyle(fontSize: 16, color: Colors.white70),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 30),
+                        Container(
+                          padding: const EdgeInsets.all(16.0),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.9),
+                            borderRadius: BorderRadius.circular(16),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.1),
+                                blurRadius: 10,
+                                offset: const Offset(0, 5),
+                              ),
+                            ],
+                          ),
+                          child: SingleChildScrollView(
                             child: Column(
+                              mainAxisSize: MainAxisSize.min,
                               children: [
                                 TextField(
                                   controller: emailController,
-                                  decoration: const InputDecoration(
+                                  decoration: InputDecoration(
                                     labelText: 'Email',
-                                    border: OutlineInputBorder(),
-                                    prefixIcon: Icon(HugeIcons.strokeRoundedMail01),
+                                    hintText: 'Enter your email',
+                                    prefixIcon: const Icon(HugeIcons.strokeRoundedMail01, size: 20),
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(8),
+                                      borderSide: BorderSide.none,
+                                    ),
+                                    filled: true,
+                                    fillColor: Colors.grey[200],
                                   ),
                                   keyboardType: TextInputType.emailAddress,
-                                  enabled: !isLoading,
                                 ),
                                 const SizedBox(height: 16),
                                 TextField(
                                   controller: passwordController,
-                                  decoration: const InputDecoration(
+                                  decoration: InputDecoration(
                                     labelText: 'Password',
-                                    border: OutlineInputBorder(),
-                                    prefixIcon: Icon(HugeIcons.strokeRoundedLock),
+                                    hintText: 'Create a password',
+                                    prefixIcon: const Icon(HugeIcons.strokeRoundedLock, size: 20),
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(8),
+                                      borderSide: BorderSide.none,
+                                    ),
+                                    filled: true,
+                                    fillColor: Colors.grey[200],
                                   ),
                                   obscureText: true,
-                                  enabled: !isLoading,
                                 ),
                                 const SizedBox(height: 16),
                                 TextField(
                                   controller: confirmPasswordController,
-                                  decoration: const InputDecoration(
+                                  decoration: InputDecoration(
                                     labelText: 'Confirm Password',
-                                    border: OutlineInputBorder(),
-                                    prefixIcon: Icon(HugeIcons.strokeRoundedLock),
+                                    hintText: 'Re-enter your password',
+                                    prefixIcon: const Icon(HugeIcons.strokeRoundedLock, size: 20),
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(8),
+                                      borderSide: BorderSide.none,
+                                    ),
+                                    filled: true,
+                                    fillColor: Colors.grey[200],
                                   ),
                                   obscureText: true,
-                                  enabled: !isLoading,
                                 ),
-                                const SizedBox(height: 16),
-                                isLoading
-                                    ? Lottie.asset(
-                                  'assets/animations/loading.json',
-                                  width: 50,
-                                  height: 50,
-                                  frameRate: FrameRate(30),
-                                )
-                                    : ElevatedButton(
+                                const SizedBox(height: 24),
+                                ElevatedButton(
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.blue,
+                                    foregroundColor: Colors.white,
                                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                                     minimumSize: const Size(double.infinity, 50),
                                   ),
@@ -112,7 +151,8 @@ class SignUpScreen extends StatelessWidget {
                                     final email = emailController.text.trim();
                                     final password = passwordController.text.trim();
                                     final confirmPassword = confirmPasswordController.text.trim();
-                                    if (email.isNotEmpty && password.isNotEmpty) {
+
+                                    if (email.isNotEmpty && password.isNotEmpty && confirmPassword.isNotEmpty) {
                                       print('Signing up with $email');
                                       context.read<AuthBloc>().add(
                                         SignUpWithEmailEvent(email, password, confirmPassword),
@@ -123,7 +163,9 @@ class SignUpScreen extends StatelessWidget {
                                       );
                                     }
                                   },
-                                  child: const Text('Sign Up', style: TextStyle(fontSize: 16)),
+                                  child: state is AuthLoading
+                                      ? const CircularProgressIndicator(color: Colors.white)
+                                      : const Text('Sign Up', style: TextStyle(fontSize: 16)),
                                 ),
                               ],
                             ),

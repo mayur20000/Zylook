@@ -1,31 +1,61 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hugeicons/hugeicons.dart'; // Ensure hugeicons is in your pubspec.yaml
+import 'package:hugeicons/hugeicons.dart';
 
 import '../bloc/home_bloc.dart';
 import '../bloc/home_event.dart';
 import '../bloc/home_state.dart';
-import '../models/outfit_model.dart'; // Import Outfit model
-import '../widgets/custom_nav_bar.dart';
-import 'outfit_detail_screen.dart'; // New outfit detail screen
+import '../models/outfit_model.dart';
+import 'outfit_detail_screen.dart'; // Keep this import
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => HomeBloc()..add(LoadOutfitsEvent()),
-      child: Scaffold(
-        backgroundColor: const Color(0xFFF0F0F0),
-        body: SafeArea(
-          child: Column(
-            children: [
-              // Custom AppBar Section
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return SafeArea(
+      child: Column(
+        children: [
+          // ... (Your existing AppBar, Search Bar, Discount Banner, Categories sections) ...
+          // These remain the same as they are part of the HomeScreen's content
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: const Icon(HugeIcons.strokeRoundedQrCode01, color: Color(0xFF5B6056), size: 28),
+                ),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Delivery address',
+                        style: TextStyle(color: Colors.grey[600], fontSize: 12),
+                      ),
+                      const Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            '92 High Street, London',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14,
+                            ),
+                          ),
+                          Icon(Icons.keyboard_arrow_down, size: 20),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                Stack(
                   children: [
                     Container(
                       padding: const EdgeInsets.all(8),
@@ -33,290 +63,246 @@ class HomeScreen extends StatelessWidget {
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      child: const Icon(HugeIcons.strokeRoundedQrCode01, color: Color(0xFF5B6056), size: 28),
+                      child: const Icon(HugeIcons.strokeRoundedNotification01, color: Color(0xFF5B6056), size: 28),
                     ),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Delivery address',
-                            style: TextStyle(color: Colors.grey[600], fontSize: 12),
-                          ),
-                          const Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                '92 High Street, London',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 14,
-                                ),
-                              ),
-                              Icon(Icons.keyboard_arrow_down, size: 20),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                    Stack(
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: const Icon(HugeIcons.strokeRoundedNotification01, color: Color(0xFF5B6056), size: 28),
+                    Positioned(
+                      top: 8,
+                      right: 8,
+                      child: Container(
+                        width: 8,
+                        height: 8,
+                        decoration: BoxDecoration(
+                          color: Colors.greenAccent[400],
+                          shape: BoxShape.circle,
                         ),
-                        Positioned(
-                          top: 8,
-                          right: 8,
-                          child: Container(
-                            width: 8,
-                            height: 8,
-                            decoration: BoxDecoration(
-                              color: Colors.greenAccent[400],
-                              shape: BoxShape.circle,
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
+                      ),
+                    )
                   ],
                 ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 16),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.1),
+                    spreadRadius: 1,
+                    blurRadius: 5,
+                    offset: const Offset(0, 3),
+                  ),
+                ],
               ),
-              const SizedBox(height: 16),
-
-              // Search Bar
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(12),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.1),
-                        spreadRadius: 1,
-                        blurRadius: 5,
-                        offset: const Offset(0, 3),
-                      ),
-                    ],
-                  ),
-                  child: const TextField(
-                    decoration: InputDecoration(
-                      hintText: 'Search the entire shop',
-                      prefixIcon: Icon(Icons.search, color: Colors.grey),
-                      border: InputBorder.none,
-                      contentPadding:
-                      EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-                    ),
-                  ),
+              child: const TextField(
+                decoration: InputDecoration(
+                  hintText: 'Search the entire shop',
+                  prefixIcon: Icon(Icons.search, color: Colors.grey),
+                  border: InputBorder.none,
+                  contentPadding:
+                  EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                 ),
               ),
-              const SizedBox(height: 16),
-
-              // Delivery Discount Banner
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: Container(
-                  padding: const EdgeInsets.all(16.0),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFE0E0E0),
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: Row(
-                    children: [
-                      const Text(
-                        'Delivery is ',
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.normal, color: Colors.black87),
-                      ),
-                      const Text(
-                        '50% ',
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black87),
-                      ),
-                      const Text(
-                        'cheaper',
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.normal, color: Colors.black87),
-                      ),
-                      const Spacer(),
-                      Image.asset(
-                        'assets/images/delivery_promo.png', // Ensure this asset exists
-                        height: 40,
-                      )
-                    ],
-                  ),
-                ),
+            ),
+          ),
+          const SizedBox(height: 16),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: Container(
+              padding: const EdgeInsets.all(16.0),
+              decoration: BoxDecoration(
+                color: const Color(0xFFE0E0E0),
+                borderRadius: BorderRadius.circular(16),
               ),
-              const SizedBox(height: 24),
-
-              // Categories Section
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text(
-                      'Categories',
-                      style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('See All Categories')));
-                      },
-                      child: const Row(
-                        children: [
-                          Text('See all', style: TextStyle(color: Colors.grey)),
-                          Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
+              child: Row(
+                children: [
+                  const Text(
+                    'Delivery is ',
+                    style: TextStyle(
+                        fontSize: 16, fontWeight: FontWeight.normal, color: Colors.black87),
+                  ),
+                  const Text(
+                    '50% ',
+                    style: TextStyle(
+                        fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black87),
+                  ),
+                  const Text(
+                    'cheaper',
+                    style: TextStyle(
+                        fontSize: 16, fontWeight: FontWeight.normal, color: Colors.black87),
+                  ),
+                  const Spacer(),
+                  Image.asset(
+                    'assets/images/delivery_promo.jpg', // Ensure this asset exists
+                    height: 40,
+                  )
+                ],
               ),
-              const SizedBox(height: 12),
-              SizedBox(
-                height: 100, // Height for horizontal category circles
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  itemCount: 6, // Example: 6 categories
-                  itemBuilder: (context, index) {
-                    final categories = [
-                      {'name': 'Phones', 'icon': HugeIcons.strokeRoundedSmartPhone01},
-                      {'name': 'Consoles', 'icon': HugeIcons.strokeRoundedGame},
-                      {'name': 'Laptops', 'icon': HugeIcons.strokeRoundedLaptop},
-                      {'name': 'Cameras', 'icon': HugeIcons.strokeRoundedCamera01},
-                      {'name': 'Audio', 'icon': HugeIcons.strokeRoundedHeadphones},
-                      {'name': 'Wearables', 'icon': HugeIcons.strokeRoundedSmartWatch01},
-                    ];
-                    final category = categories[index % categories.length];
-                    return Padding(
-                      padding: const EdgeInsets.only(right: 16.0),
-                      child: Column(
-                        children: [
-                          Container(
-                            width: 60,
-                            height: 60,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              shape: BoxShape.circle,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.withOpacity(0.1),
-                                  spreadRadius: 1,
-                                  blurRadius: 3,
-                                  offset: const Offset(0, 2),
-                                ),
-                              ],
-                            ),
-                            child: Icon(category['icon'] as IconData, size: 30, color: const Color(0xFF5B6056)),
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            category['name'] as String,
-                            style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
-                          ),
-                        ],
-                      ),
-                    );
+            ),
+          ),
+          const SizedBox(height: 24),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  'Categories',
+                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                ),
+                TextButton(
+                  onPressed: () {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('See All Categories')));
                   },
+                  child: const Row(
+                    children: [
+                      Text('See all', style: TextStyle(color: Colors.grey)),
+                      Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey),
+                    ],
+                  ),
                 ),
-              ),
-              const SizedBox(height: 24),
+              ],
+            ),
+          ),
+          const SizedBox(height: 12),
+          SizedBox(
+            height: 100, // Height for horizontal category circles
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              itemCount: 6, // Example: 6 categories
+              itemBuilder: (context, index) {
+                final categories = [
+                  {'name': 'Phones', 'icon': HugeIcons.strokeRoundedSmartPhone01},
+                  {'name': 'Consoles', 'icon': HugeIcons.strokeRoundedGame},
+                  {'name': 'Laptops', 'icon': HugeIcons.strokeRoundedLaptop},
+                  {'name': 'Cameras', 'icon': HugeIcons.strokeRoundedCamera01},
+                  {'name': 'Audio', 'icon': HugeIcons.strokeRoundedHeadphones},
+                  {'name': 'Wearables', 'icon': HugeIcons.strokeRoundedSmartWatch01},
+                ];
+                final category = categories[index % categories.length];
+                return Padding(
+                  padding: const EdgeInsets.only(right: 16.0),
+                  child: Column(
+                    children: [
+                      Container(
+                        width: 60,
+                        height: 60,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          shape: BoxShape.circle,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.1),
+                              spreadRadius: 1,
+                              blurRadius: 3,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        child: Icon(category['icon'] as IconData, size: 30, color: const Color(0xFF5B6056)),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        category['name'] as String,
+                        style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+          ),
+          const SizedBox(height: 24),
 
-              // Flash Sale Section (Outfits)
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text(
-                      'Flash Sale',
-                      style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                      decoration: BoxDecoration(
-                        color: Colors.yellow[600],
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                      child: const Text(
-                        '02:59:23',
-                        style: TextStyle(
-                            fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87),
-                      ),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('See All Flash Sales')));
-                      },
-                      child: const Row(
-                        children: [
-                          Text('See all', style: TextStyle(color: Colors.grey)),
-                          Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey),
-                        ],
-                      ),
-                    ),
-                  ],
+          // Flash Sale Section (Outfits)
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  'Flash Sale',
+                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                 ),
-              ),
-              const SizedBox(height: 12),
-              Expanded(
-                child: BlocBuilder<HomeBloc, HomeState>(
-                  builder: (context, state) {
-                    if (state is HomeLoading) {
-                      return const Center(child: CircularProgressIndicator());
-                    } else if (state is HomeLoaded) {
-                      // Displaying outfits as Flash Sale items
-                      return ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                        itemCount: state.outfits.length,
-                        itemBuilder: (context, index) {
-                          final outfit = state.outfits[index];
-                          final outfitPrice = state.outfitPrices[outfit.id] ?? 0.0;
-                          // Assume an old price for demonstration, e.g., 20% higher
-                          final oldOutfitPrice = outfitPrice * 1.25;
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: Colors.yellow[600],
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: const Text(
+                    '02:59:23',
+                    style: TextStyle(
+                        fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87),
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('See All Flash Sales')));
+                  },
+                  child: const Row(
+                    children: [
+                      Text('See all', style: TextStyle(color: Colors.grey)),
+                      Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 12),
+          Expanded(
+            child: BlocBuilder<HomeBloc, HomeState>(
+              builder: (context, state) {
+                if (state is HomeLoading) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (state is HomeLoaded) {
+                  return ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    itemCount: state.outfits.length,
+                    itemBuilder: (context, index) {
+                      final outfit = state.outfits[index];
+                      final outfitPrice = state.outfitPrices[outfit.id] ?? 0.0;
+                      final oldOutfitPrice = outfitPrice * 1.25;
 
-                          return FlashSaleOutfitCard(
-                            outfit: outfit,
-                            currentPrice: outfitPrice,
-                            oldPrice: oldOutfitPrice,
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => OutfitDetailScreen(outfit: outfit),
-                                ),
-                              );
-                            },
+                      return FlashSaleOutfitCard(
+                        outfit: outfit,
+                        currentPrice: outfitPrice,
+                        oldPrice: oldOutfitPrice,
+                        onTap: () {
+                          // Crucial Change: Use Navigator.of(context) (which is the current tab's navigator)
+                          // to push the OutfitDetailScreen. This keeps it within the Home tab's stack.
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (detailContext) => OutfitDetailScreen(outfit: outfit),
+                            ),
                           );
                         },
                       );
-                    } else if (state is HomeError) {
-                      return Center(child: Text(state.message));
-                    }
-                    return const Center(child: Text('No Flash Sale outfits available'));
-                  },
-                ),
-              ),
-            ],
+                    },
+                  );
+                } else if (state is HomeError) {
+                  return Center(child: Text(state.message));
+                }
+                return const Center(child: Text('No Flash Sale outfits available'));
+              },
+            ),
           ),
-        ),
-        bottomNavigationBar: const CustomNavBar(),
+        ],
       ),
     );
   }
 }
 
-// Custom Widget for Flash Sale Outfit Cards (renamed from ProductCard)
+// FlashSaleOutfitCard remains unchanged
 class FlashSaleOutfitCard extends StatelessWidget {
   final Outfit outfit;
   final double currentPrice;
@@ -347,13 +333,13 @@ class FlashSaleOutfitCard extends StatelessWidget {
             children: [
               Stack(
                 children: [
-                  Image.network( // Use Image.network for Firebase storage URLs
+                  Image.network(
                     outfit.imageUrl,
                     height: 120,
                     width: double.infinity,
                     fit: BoxFit.cover,
                     errorBuilder: (context, error, stackTrace) => Image.asset(
-                      'assets/images/placeholder_outfit.png', // Placeholder on error
+                      'assets/images/placeholder_outfit.png',
                       height: 120,
                       width: double.infinity,
                       fit: BoxFit.cover,
